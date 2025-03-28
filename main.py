@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-class Password(ABC):
+class PasswordProperty(ABC):
     def __init__(self, password):
         self.password = str(password)
         self.evaluator = 0
@@ -8,8 +8,7 @@ class Password(ABC):
     def evaluate(self):
         pass
 
-
-class PasswordLenght(Password):
+class PasswordLenght(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
 
@@ -21,22 +20,43 @@ class PasswordLenght(Password):
         elif 12 < len(self.password):
             self.evaluator +=3
 
-class PasswordUpperCase(Password):
+class PasswordUpperCase(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
 
     def evaluate(self):
+        count = 0
         for i in self.password:
             if i.isupper():
-                self.evaluator +=3
-                break
+                count +=1
+
+        if count == len(self.password) or count == 0:
+            self.evaluator +=1
+        else:
+            self.evaluator +=3
+
+class PasswordEvaluator:
+    def __init__(self, password):
+        self.password = password
+        self.score = 0
+        self.criterias = [PasswordLenght(password), PasswordUpperCase(password)]
+
+    def finalEvaluate(self):
+        for i in self.criterias:
+            i.evaluate()
+            self.score += i.evaluator
+
+
+        return self.score
+            
+
 
 
             
 
 
-test = PasswordUpperCase("C1234")
+test = PasswordEvaluator("1234")
 
-test.evaluate()
+test.finalEvaluate()
 
-print(test.evaluator)
+print(test.score)
