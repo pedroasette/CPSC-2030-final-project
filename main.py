@@ -78,13 +78,28 @@ class PasswordSpecialCharacter(PasswordProperty):
         if count > 0:
             self.evaluator +=1 #value will change in the future
 
+class CommonPasswords(PasswordProperty):
+    def __init__(self, password):
+        super().__init__(password)
+    
+    def evaluate(self):
+        with open("commonPasswordList.txt", "r") as plist:                 
+            p = plist.read().split()
 
+            count = 0
+            for i in p:
+                if i == self.password:
+                    count +=1
+            
+            if count == 0:
+                self.evaluator +=1 #value will change in the future
+            
 #Class that will combine all the properties in actual evaluation
 class PasswordEvaluator:
     def __init__(self, password):
         self.password = password
         self.score = 0
-        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password)]
+        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password), CommonPasswords(password)]
 
     def finalEvaluate(self):
         for i in self.criterias:
@@ -93,6 +108,5 @@ class PasswordEvaluator:
 
         return self.score
             
-test = PasswordEvaluator("")
-test.finalEvaluate()
-print(test.score)
+test = PasswordEvaluator("Pa197370")
+print(test.finalEvaluate())
