@@ -108,5 +108,5 @@ class PasswordEvaluator:
 
         return self.score
             
-test = PasswordEvaluator("Pa197370")
+test = PasswordEvaluator("")
 print(test.finalEvaluate())
