@@ -15,7 +15,7 @@ class PasswordLenght(PasswordProperty):
         super().__init__(password)
 
     def evaluate(self):
-        if len(self.password) < 8:
+        if 4 <len(self.password) < 8:
             self.evaluator +=1 #value will change in the future
         elif 8 <= len(self.password) < 12:
             self.evaluator +=2 #value will change in the future
@@ -33,10 +33,8 @@ class PasswordUpperCase(PasswordProperty):
             if i.isupper():
                 count +=1
 
-        if count == len(self.password) or count == 0:
+        if count > 0:
             self.evaluator +=1 #value will change in the future
-        else:
-            self.evaluator +=3 #value will change in the future
 
 
 class PasswordLowerCase(PasswordProperty):
@@ -49,10 +47,36 @@ class PasswordLowerCase(PasswordProperty):
             if i.islower():
                 count +=1
 
-        if count == len(self.password) or count == 0:
+        if count > 0:
             self.evaluator +=1 #value will change in the future
-        else:
-            self.evaluator +=3 #value will change in the future
+
+
+class PasswordNumber(PasswordProperty):
+    def __init__(self, password):
+        super().__init__(password)
+
+    def evaluate(self):
+        count = 0
+        for i in self.password:
+            if i in "0123456789":
+                count +=1
+
+        if count > 0:
+            self.evaluator +=1 #value will change in the future
+        
+class PasswordSpecialCharacter(PasswordProperty):
+    def __init__(self, password):
+        super().__init__(password)
+
+    def evaluate(self):
+        count = 0
+        for i in self.password:
+            if i in r"!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~":
+
+                count +=1
+        
+        if count > 0:
+            self.evaluator +=1 #value will change in the future
 
 
 #Class that will combine all the properties in actual evaluation
@@ -60,7 +84,7 @@ class PasswordEvaluator:
     def __init__(self, password):
         self.password = password
         self.score = 0
-        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password)]
+        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password)]
 
     def finalEvaluate(self):
         for i in self.criterias:
@@ -69,6 +93,6 @@ class PasswordEvaluator:
 
         return self.score
             
-test = PasswordEvaluator("Pa197370")
+test = PasswordEvaluator("")
 test.finalEvaluate()
 print(test.score)
