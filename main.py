@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-#Base class
+from datetime import datetime
+
+#base class
 class PasswordProperty(ABC):
     def __init__(self, password):
         self.password = str(password)
@@ -9,7 +11,7 @@ class PasswordProperty(ABC):
     def evaluate(self):
         pass
 
-
+#check the password lenght
 class PasswordLenght(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -22,7 +24,7 @@ class PasswordLenght(PasswordProperty):
         elif 12 < len(self.password):
             self.evaluator +=3 #value will change in the future
 
-
+#check if it has at least 1 upper case
 class PasswordUpperCase(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -36,7 +38,7 @@ class PasswordUpperCase(PasswordProperty):
         if count > 0:
             self.evaluator +=1 #value will change in the future
 
-
+#check if it has at least 1 lower case
 class PasswordLowerCase(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -50,7 +52,7 @@ class PasswordLowerCase(PasswordProperty):
         if count > 0:
             self.evaluator +=1 #value will change in the future
 
-
+#check if it has at least 1 number
 class PasswordNumber(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -63,7 +65,8 @@ class PasswordNumber(PasswordProperty):
 
         if count > 0:
             self.evaluator +=1 #value will change in the future
-        
+
+ #check if it has at least 1 special character       
 class PasswordSpecialCharacter(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -78,6 +81,7 @@ class PasswordSpecialCharacter(PasswordProperty):
         if count > 0:
             self.evaluator +=1 #value will change in the future
 
+#check if it is a common used password
 class CommonPasswords(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -94,6 +98,7 @@ class CommonPasswords(PasswordProperty):
             if count == 0:
                 self.evaluator +=1 #value will change in the future
 
+#check if the password repeat the same character multiple times
 class PasswordRepetition(PasswordProperty):
     def __init__(self, password):
         super().__init__(password)
@@ -106,12 +111,32 @@ class PasswordRepetition(PasswordProperty):
         if count == 0:
             self.evaluator +=1 #value will change in the future
 
+#Check if the password is a date, 
+class PasswordDate(PasswordProperty):
+    def __init__(self, password):
+        super().__init__(password)
+    
+    def evaluate(self):
+        try:
+            datetime.strptime(self.password, "%m%d%Y")
+            return self.evaluator
 
+        except ValueError:
+            try:
+                datetime.strptime(self.password, "%m%d%y")
+                return self.evaluator
+            
+            except ValueError:
+                self.evaluator +=1 #value will change in the future
+                return self.evaluator
+
+
+#combine all the evaluators
 class PasswordEvaluator:
     def __init__(self, password):
         self.password = password
         self.score = 0
-        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password), CommonPasswords(password), PasswordRepetition(password)]
+        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password), CommonPasswords(password), PasswordRepetition(password), PasswordDate(password)]
 
     def finalEvaluate(self):
         if len(self.password) < 4:
