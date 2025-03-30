@@ -93,20 +93,36 @@ class CommonPasswords(PasswordProperty):
             
             if count == 0:
                 self.evaluator +=1 #value will change in the future
-            
-#Class that will combine all the properties in actual evaluation
+
+class PasswordRepetition(PasswordProperty):
+    def __init__(self, password):
+        super().__init__(password)
+
+    def evaluate(self):
+        count = 0
+        for i in range(len(self.password) - 2):
+            if self.password[i] == self.password[i + 1] == self.password[i + 2]:
+                count +=1
+        if count == 0:
+            self.evaluator +=1 #value will change in the future
+
+
 class PasswordEvaluator:
     def __init__(self, password):
         self.password = password
         self.score = 0
-        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password), CommonPasswords(password)]
+        self.criterias = [PasswordLenght(password), PasswordUpperCase(password), PasswordLowerCase(password), PasswordNumber(password), PasswordSpecialCharacter(password), CommonPasswords(password), PasswordRepetition(password)]
 
     def finalEvaluate(self):
-        for i in self.criterias:
-            i.evaluate()
-            self.score += i.evaluator
+        if len(self.password) < 4:
+            pass
+        else:
+            for i in self.criterias:
+                i.evaluate()
+                self.score += i.evaluator
 
         return self.score
             
 test = PasswordEvaluator("")
 print(test.finalEvaluate())
+
