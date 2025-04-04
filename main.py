@@ -15,12 +15,9 @@ class PasswordRequisites(ABC):
 class PasswordLenght(PasswordRequisites):
     def __init__(self, password):
         super().__init__(password)
-
     def evaluate(self):
-        if 0 < len(self.password) < 4:
-            self.evaluator +=5
-        elif 4 <= len(self.password) < 8:
-            self.evaluator +=15
+        if 4 <= len(self.password) < 8:
+            self.evaluator +=10
         elif 8 <= len(self.password) < 12:
             self.evaluator +=25
         elif 12 <= len(self.password):
@@ -151,37 +148,58 @@ class PasswordRepetition(PasswordPatterns):
             elif self.final_score < 50:
                     self.decrease +=10
 
-            
-""""
+        
+
 #Check if the password is a date, IT NEEDS TO BE FIXED
 class PasswordDate(PasswordPatterns):
     def __init__(self, password, score):
         super().__init__(password, score)
-    
 
-""" 
+    def evaluate(self):
+        with open("dates.txt", "r") as date:
+            dates = date.read().splitlines()
+            year = str(list(range(1920, 2026))).split()
 
+            for x in dates:
+                for y in year:
+                    if x + y.strip(("[],")) in self.password:
+                        if self.final_score > 40:
+                            if len(self.password) > 10:
+                                self.decrease +=10
+                            elif 8 < len(self.password) <= 10:
+                                self.decrease +=13
+                        elif self.final_score == 40:
+                            self.decrease +=17
+                        
 
 #combine all the evaluators
 class FinalPasswordEvaluator:
     def __init__(self, password, score):
         self.password = password
         self.score = score
-        self.criterias = [CommonPasswords(password, score), PasswordRepetition(password, score)]
+        self.criterias = [CommonPasswords(password, score), PasswordRepetition(password, score), PasswordDate(password, score)]
 
     def finalEvaluate(self):
         for i in self.criterias:
             i.evaluate()
             self.score -= i.decrease
+            if 1 <= len(self.password) <= 3:
+                self.score = 5
             if self.score < 0:  
                 self.score = 0
+            
+
+
+            
         return self.score
 
-password = "123467890bvC@"
+
+
+password = "Ab2"
             
 psswrd = PasswordEvaluator(password)
 score = psswrd.finalEvaluate()
-print(score)
+
 
 
 test = FinalPasswordEvaluator(password, score)
