@@ -28,4 +28,4 @@ How to install and use the software
 
 ->Run the file main.py
 
--Follow the displayed information
+->Follow the displayed information
