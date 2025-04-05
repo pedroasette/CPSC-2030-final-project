@@ -29,6 +29,10 @@ class PasswordPatterns(ABC):
     def report(self):
         pass
     
+class Evaluator(ABC):
+    @abstractmethod
+    def finalEvaluate():
+        pass
 
 #check the password lenght
 class PasswordLenght(PasswordRequisites):
@@ -210,10 +214,12 @@ class PasswordDate(PasswordPatterns):
             return "Your password is or contain a date"
         else: 
             pass
+
+
                         
 
 #combine all the evaluators
-class PasswordEvaluator:
+class PasswordEvaluator(Evaluator):
     def __init__(self, password):
         self.password = password
         self.score = 0
@@ -232,7 +238,7 @@ class PasswordEvaluator:
 
 
 #combine all the evaluators
-class FinalPasswordEvaluator:
+class FinalPasswordEvaluator(Evaluator):
     def __init__(self, password, score):
         self.password = password
         self.score = score
@@ -271,6 +277,8 @@ def run_program():
         print("The weaknesses of your passwords are:")
         for i in report:
             print(i)
+    else:
+        print("Your password has no weaknesses!")
 
 
 run_program()
