@@ -5,6 +5,7 @@ Description
 For this final project I created a password strenght evaluator. The evaluator consists in analyzing 8 different password patterns to create a final score and generate a weakness report for the password. The 8 criteria are:
 
 ->Password lenght
+
 ->Has at least 1 lower case
 
 ->Has at least 1 Upper Case
