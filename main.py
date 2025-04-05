@@ -195,19 +195,20 @@ class PasswordDate(PasswordPatterns):
 
     def evaluate(self):
         with open("dates.txt", "r") as date:
-            dates = date.read().splitlines()
-            year = str(list(range(1920, 2026))).split()
+            dates = date.read().splitlines()  # lines like "0101", "2506", etc.
+            years = [str(y) for y in range(1920, 2026)]  # proper list of strings
 
-            for x in dates:
-                for y in year:
-                    if x + y.strip(("[],")) in self.password:
-                        if self.final_score > 40:
-                            if len(self.password) > 10:
-                                self.decrease +=10
-                            elif 8 < len(self.password) <= 10:
-                                self.decrease +=13
-                        elif self.final_score == 40:
-                            self.decrease +=15
+        for x in dates:
+            for y in years:
+                if x + y in self.password:
+                    if self.final_score == 45:
+                       self.decrease +=15
+                    else: 
+                        self.decrease +=10
+
+                  
+                    
+            
     
     def report(self):
         if self.decrease != 0:
