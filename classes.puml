@@ -1,0 +1,123 @@
+@startuml
+
+
+abstract class PasswordRequisites {
+    - password: str
+    - evaluator: int
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+abstract class PasswordPatterns {
+    - password: str
+    - final_score: int
+    - decrease: int
+    + __init__(password: str, score: int)
+    + evaluate(): void
+    + report(): str
+}
+
+abstract  class Evaluator {
+    +finalEvaluate(): void
+}
+
+
+class PasswordLenght  {
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordUpperCase {
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordLowerCase {
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordNumber {
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordSpecialCharacter {
+    + __init__(password: str)
+    + evaluate(): void
+    + report(): str
+}
+
+
+class CommonPasswords {
+    + __init__(password: str, score: int)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordRepetition {
+    + __init__(password: str, score: int)
+    + evaluate(): void
+    + report(): str
+}
+
+class PasswordDate {
+    + __init__(password: str, score: int)
+    + evaluate(): void
+    + report(): str
+}
+
+
+class PasswordEvaluator {
+    - password: str
+    - score: int
+    - criterias: List<PasswordRequisites>
+    - report: List[str]
+    + __init__(password: str)
+    + finalEvaluate(): int
+}
+
+class FinalPasswordEvaluator {
+    - password: str
+    - score: int
+    - criterias: List<PasswordPatterns>
+    - report: List[str]
+    + __init__(password: str, score: int)
+    + finalEvaluate(): int
+}
+
+
+PasswordLenght --|> PasswordRequisites
+PasswordUpperCase --|> PasswordRequisites
+PasswordLowerCase --|> PasswordRequisites
+PasswordNumber --|> PasswordRequisites
+PasswordSpecialCharacter --|> PasswordRequisites
+
+PasswordEvaluator --|> Evaluator
+FinalPasswordEvaluator --|> Evaluator
+
+CommonPasswords --|> PasswordPatterns
+PasswordRepetition --|> PasswordPatterns
+PasswordDate --|> PasswordPatterns
+
+
+PasswordEvaluator *-- PasswordLenght
+PasswordEvaluator *-- PasswordUpperCase
+PasswordEvaluator *-- PasswordLowerCase
+PasswordEvaluator *-- PasswordNumber
+PasswordEvaluator *-- PasswordSpecialCharacter
+
+FinalPasswordEvaluator *-- CommonPasswords
+FinalPasswordEvaluator *-- PasswordRepetition
+FinalPasswordEvaluator *-- PasswordDate
+
+FinalPasswordEvaluator o-- PasswordEvaluator
+
+@enduml
+
+
