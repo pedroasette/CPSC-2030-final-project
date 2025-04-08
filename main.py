@@ -40,16 +40,21 @@ class PasswordLenght(PasswordRequisites):
         super().__init__(password)
     def evaluate(self):
         if 4 <= len(self.password) < 8:
-            self.evaluator +=15
+            self.evaluator +=10
         elif 8 <= len(self.password) < 12:
-            self.evaluator +=30
-        elif 12 <= len(self.password):
-            self.evaluator +=40
+            self.evaluator +=25
+        elif 12 <= len(self.password) <16:
+            self.evaluator +=50
+        elif 16 <= len(self.password):
+            self.evaluator +=100
+
     
     def report(self):
         if  len(self.password) < 8:
             return "Your password is short"
-        else: 
+        elif 8 <= len(self.password) < 12:
+            return "Your password is not short, but could be longer"
+        else:
             pass
 
 
@@ -65,7 +70,7 @@ class PasswordUpperCase(PasswordRequisites):
                 count +=1
 
         if count > 0:
-            self.evaluator +=15
+            self.evaluator +=10
 
     def report(self):
         if self.evaluator != 15:
@@ -85,7 +90,7 @@ class PasswordLowerCase(PasswordRequisites):
                 count +=1
 
         if count > 0:
-            self.evaluator +=15
+            self.evaluator +=10
 
     def report(self):
         if self.evaluator != 15:
@@ -106,7 +111,7 @@ class PasswordNumber(PasswordRequisites):
                 count +=1
 
         if count > 0:
-            self.evaluator +=15
+            self.evaluator +=10
 
     def report(self):
         if self.evaluator != 15:
@@ -127,7 +132,7 @@ class PasswordSpecialCharacter(PasswordRequisites):
                 count +=1
         
         if count > 0:
-            self.evaluator +=15
+            self.evaluator +=10
 
     def report(self):
         if self.evaluator != 15:
@@ -152,9 +157,9 @@ class CommonPasswords(PasswordPatterns):
                     break
             
             if count != 0:
-                if self.final_score >= 50:
+                if self.final_score >= 60:
                     self.decrease += 25
-                elif self.final_score < 50:
+                elif self.final_score < 60:
                     self.decrease += 15
 
     def report(self):
@@ -171,13 +176,15 @@ class PasswordRepetition(PasswordPatterns):
 
     def evaluate(self):
         count = 0
-        for i in range(len(self.password) - 2):
-            if self.password[i] == self.password[i + 1] == self.password[i + 2]:
+        for i in range(len(self.password) - 4):
+            if self.password[i] == self.password[i + 1] == self.password[i + 2] == self.password[i + 3] == self.password[i + 4]:
                 count +=1
                 break
         if count != 0:
-            if self.final_score >= 50:
-                    self.decrease += 25
+            if self.final_score >= 100:
+                self.decrease += 75
+            elif 100 > self.final_score >= 50 :
+                    self.decrease += 45
             elif self.final_score < 50:
                     self.decrease +=10
 
@@ -254,9 +261,11 @@ class FinalPasswordEvaluator(Evaluator):
 
             self.score -= i.decrease
             if 1 <= len(self.password) <= 3:
-                self.score = 8
+                self.score = 0
             if self.score < 0:  
                 self.score = 0
+            if self.score > 100:
+                self.score = 100
             
 
         return self.score
@@ -274,12 +283,13 @@ def run_program():
     report2 = evaluator.report
     report = report1 + report2
     print(f"Your final score is {finalscore}!")
-    if len(report) > 0:
-        print("The weaknesses of your passwords are:")
-        for i in report:
-            print(i)
+    if finalscore <= 80:
+        if len(report) > 0:
+            print("The weaknesses of your passwords are:")
+            for i in report:
+                print(i)
     else:
-        print("Your password has no weaknesses!")
+        print("Your password is strong")
 
-
-run_program()
+if __name__ == "__main__":
+    run_program()
