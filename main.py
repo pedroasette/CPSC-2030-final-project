@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
+
 
 #base class
 class PasswordRequisites(ABC):
@@ -28,7 +28,8 @@ class PasswordPatterns(ABC):
     @abstractmethod
     def report(self):
         pass
-    
+
+#base class  
 class Evaluator(ABC):
     @abstractmethod
     def finalEvaluate():
@@ -53,7 +54,7 @@ class PasswordLenght(PasswordRequisites):
         if  len(self.password) < 8:
             return "Your password is short"
         elif 8 <= len(self.password) < 12:
-            return "Your password is not short, but could be longer"
+            return "Your password could be longer"
         else:
             pass
 
@@ -114,7 +115,7 @@ class PasswordNumber(PasswordRequisites):
             self.evaluator +=10
 
     def report(self):
-        if self.evaluator != 15:
+        if self.evaluator != 10:
             return "Your password has no numbers"
         else: 
             pass
